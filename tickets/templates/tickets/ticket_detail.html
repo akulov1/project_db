@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Детали билета</title>
+    <style>
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
+    <h1>Детали билета</h1>
 
+    <p><strong>ID билета:</strong> {{ ticket.id }}</p>
+    <p><strong>Пользователь:</strong> {{ ticket.user_id }}</p>
+    <p><strong>Авиакомпания:</strong> {{ ticket.airline_id }}</p>
+    <p><strong>Номер рейса:</strong> {{ ticket.flight_number }}</p>
+    <p><strong>Отправление:</strong> {{ ticket.departure }}</p>
+    <p><strong>Прибытие:</strong> {{ ticket.arrival }}</p>
+    <p><strong>Дата:</strong> {{ ticket.date }}</p>
+    <p><strong>Цена:</strong> {{ ticket.price }}</p>
+
+    <a href="{% url 'ticket_list' %}" class="button">Назад к списку билетов</a>
 </body>
 </html>

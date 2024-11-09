@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список пользователей</title>
+    <style>
+        .button-group {
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Все пользователи</h1>
+
+    <div class="button-group">
+        <a href="{% url 'create_user' %}" class="button">Создать пользователя</a>
+        <a href="{% url 'ticket_list' %}" class="button">Просмотр билетов</a>
+        <a href="{% url 'airline_list' %}" class="button">Просмотр авиакомпаний</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID пользователя</th>
+                <th>Имя пользователя</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

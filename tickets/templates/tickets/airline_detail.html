@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Детали авиакомпании</title>
+    <style>
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
+    <h1>Детали авиакомпании</h1>
 
+    <p><strong>ID авиакомпании:</strong> {{ airline.id }}</p>
+    <p><strong>Название:</strong> {{ airline.name }}</p>
+    <p><strong>Код:</strong> {{ airline.code }}</p>
+
+    <a href="{% url 'airline_list' %}" class="button">Назад к списку авиакомпаний</a>
 </body>
 </html>

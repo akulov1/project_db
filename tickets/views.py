@@ -61,3 +61,14 @@ def create_ticket(request):
 def ticket_detail(request, ticket_id):
     ticket = Ticket.get_ticket(ticket_id)
     return render(request, "tickets/ticket_detail.html", {"ticket": ticket})
+
+def ticket_list(request):
+    tickets = Ticket.get_all_tickets()
+    return render(request, "tickets/ticket_list.html", {"tickets": tickets})
+
+def airline_list(request):
+    airlines = Airline.get_all_airlines()
+    return render(request, 'tickets/airlines_list.html',{"airlines":airlines})
+def user_list(request):
+    users = User.get_all_users()
+    return render(request,'tickets/users_list.html',{'users':users})
