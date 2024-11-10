@@ -59,20 +59,23 @@ class Ticket:
     @staticmethod
     def create_ticket(user_id, airline_id, flight_number, departure, arrival, date, price):
         ticket_id = str(uuid.uuid4())
-        # Преобразуем дату в строку формата ISO 8601
         date_str = date.isoformat() if isinstance(date, datetime) else date
         price_float = float(price) if isinstance(price, Decimal) else price
 
-        redis_client.hset(f"ticket:{ticket_id}", mapping={
+        ticket_data = {
             "ticket_id": ticket_id,
-            "user_id": user_id,
             "airline_id": airline_id,
             "flight_number": flight_number,
             "departure": departure,
             "arrival": arrival,
-            "date": date_str,  # Сохраняем дату как строку
-            "price": price_float
-        })
+            "date": date_str,
+            "price": price_float,
+        }
+        # Добавляем user_id только если он не пустой
+        if user_id:
+            ticket_data["user_id"] = user_id
+
+        redis_client.hset(f"ticket:{ticket_id}", mapping=ticket_data)
         return ticket_id
 
     @staticmethod

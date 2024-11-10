@@ -1,6 +1,15 @@
-<h1>Создание билета</h1>
+{% extends "base.html" %}
+
+{% block title %}Создать билет{% endblock %}
+
+{% block content %}
+<h1>Создать билет</h1>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create ticket</button>
+    <button type="submit" class="button">Создать</button>
 </form>
+
+<a href="{% url 'ticket_list' %}" class="button">Назад к списку билетов</a>
+{% endblock %}

@@ -1,19 +1,28 @@
 from django import forms
+from .redis_models import User, Airline
 
 class UserForm(forms.Form):
-    username = forms.CharField(label='Username',max_length=100)
-    email = forms.EmailField(label='Email')
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    username = forms.CharField(label='Никнейм',max_length=100)
+    email = forms.EmailField(label='E-mail')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
 
 class AirlineForm(forms.Form):
-    name = forms.CharField(label='Airline Name',max_length=100)
-    code = forms.CharField(label='Airline Code', max_length=10)
+    name = forms.CharField(label='Название авиакомпании',max_length=100)
+    code = forms.CharField(label='Код авиакомании', max_length=10)
+
 
 class TicketForm(forms.Form):
-    user_id = forms.CharField(label='User ID')
-    airline_id = forms.CharField(label='Airline ID')
-    flight_number = forms.CharField(label='Flight Number', max_length=10)
-    departure = forms.CharField(label='Departure Airport', max_length=3)
-    arrival = forms.CharField(label='Arrival Airport', max_length=3)
-    date = forms.DateTimeField(label='Flight Date')
-    price = forms.DecimalField(label='Price',max_digits=10,decimal_places=2)
+    user_id = forms.ChoiceField(
+        choices=[("", "Без пользователя")] + [(user["id"], user["username"]) for user in User.get_all_users()],
+        required=False,
+        label="Пользователь"
+    )
+    airline_id = forms.ChoiceField(
+        choices=[(airline["id"], airline["name"]) for airline in Airline.get_all_airlines()],
+        label="Авиакомпания"
+    )
+    flight_number = forms.CharField(label="Номер рейса", max_length=20)
+    departure = forms.CharField(label="Пункт отправления", max_length=50)
+    arrival = forms.CharField(label="Пункт прибытия", max_length=50)
+    date = forms.DateTimeField(label="Дата и время рейса", widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    price = forms.DecimalField(label="Цена", max_digits=10, decimal_places=2)

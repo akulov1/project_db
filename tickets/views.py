@@ -43,14 +43,22 @@ def create_ticket(request):
     if request.method == "POST":
         form = TicketForm(request.POST)
         if form.is_valid():
+            user_id = form.cleaned_data["user_id"] or None  # Может быть None, если не выбран
+            airline_id = form.cleaned_data["airline_id"]
+            flight_number = form.cleaned_data["flight_number"]
+            departure = form.cleaned_data["departure"]
+            arrival = form.cleaned_data["arrival"]
+            date = form.cleaned_data["date"]
+            price = form.cleaned_data["price"]
+
             ticket_id = Ticket.create_ticket(
-                form.cleaned_data["user_id"],
-                form.cleaned_data["airline_id"],
-                form.cleaned_data["flight_number"],
-                form.cleaned_data["departure"],
-                form.cleaned_data["arrival"],
-                form.cleaned_data["date"],
-                form.cleaned_data["price"]
+                user_id,
+                airline_id,
+                flight_number,
+                departure,
+                arrival,
+                date,
+                price
             )
             return redirect("ticket_detail", ticket_id=ticket_id)
     else:

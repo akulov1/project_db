@@ -1,6 +1,15 @@
-<h1>Регистрация</h1>
+{% extends "base.html" %}
+
+{% block title %}Создать пользователя{% endblock %}
+
+{% block content %}
+<h1>Создать пользователя</h1>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create User</button>
+    <button type="submit" class="button">Создать</button>
 </form>
+
+<a href="{% url 'user_list' %}" class="button">Назад к списку пользователей</a>
+{% endblock %}

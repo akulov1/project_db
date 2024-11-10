@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #f8f8f8;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.blue-text {
+    color: #007bff; /* Синий цвет */
+}
+
+.orange-text {
+    color: #ff8c00; /* Оранжевый цвет */
+}
+
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #007bff;
+}
