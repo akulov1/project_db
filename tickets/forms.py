@@ -1,6 +1,16 @@
 from django import forms
 from .redis_models import User, Airline
 
+CITIES = [
+    ('MOW', 'Москва'),
+    ('SPB', 'Санкт-Петербург'),
+    ('LED', 'Ленинград'),
+    ('NYC', 'Нью-Йорк'),
+    ('LON', 'Лондон'),
+    ('PAR', 'Париж'),
+]
+
+
 class UserForm(forms.Form):
     username = forms.CharField(label='Никнейм',max_length=100)
     email = forms.EmailField(label='E-mail')
@@ -22,7 +32,7 @@ class TicketForm(forms.Form):
         label="Авиакомпания"
     )
     flight_number = forms.CharField(label="Номер рейса", max_length=20)
-    departure = forms.CharField(label="Пункт отправления", max_length=50)
-    arrival = forms.CharField(label="Пункт прибытия", max_length=50)
+    departure = forms.ChoiceField(choices=CITIES, label='Пункт отправления')
+    arrival = forms.ChoiceField(choices=CITIES, label='Пункт прибытия')
     date = forms.DateTimeField(label="Дата и время рейса", widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     price = forms.DecimalField(label="Цена", max_digits=10, decimal_places=2)

@@ -21,6 +21,8 @@
             <td>{{ airline.name }}</td>
             <td>{{ airline.code }}</td>
             <td><a href="{% url 'airline_detail' airline.id %}" class="button">Подробнее</a></td>
+            <td><a href="{% url 'edit_airline' airline_id=airline.id %}" class="button">Редактировать</a></td>
+            <td><a href="{% url 'delete_airline' airline_id=airline.id %}" class="button">Удалить</a></td>
         </tr>
         {% endfor %}
     </tbody>

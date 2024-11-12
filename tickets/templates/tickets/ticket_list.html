@@ -28,6 +28,9 @@
             <td>{{ ticket.arrival }}</td>
             <td>{{ ticket.date }}</td>
             <td>{{ ticket.price }}</td>
+            <td><a href="{% url 'ticket_detail' ticket_id=ticket.ticket_id %}" class="button">Подробнее</a></td>
+            <td><a href="{% url 'edit_ticket' ticket_id=ticket.ticket_id %}" class="button">Редактировать</a></td>
+            <td><a href="{% url 'delete_ticket' ticket_id=ticket.ticket_id %}" class="button">Удалить</a></td>
         </tr>
         {% endfor %}
     </tbody>

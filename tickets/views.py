@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from .forms import UserForm, AirlineForm, TicketForm
 from .redis_models import User, Airline, Ticket
 
@@ -80,3 +80,69 @@ def airline_list(request):
 def user_list(request):
     users = User.get_all_users()
     return render(request,'tickets/users_list.html',{'users':users})
+
+def edit_airline(request, airline_id):
+    airline_data = Airline.get_airline(airline_id)
+    if request.method == 'POST':
+        form = AirlineForm(request.POST, initial=airline_data)
+        if form.is_valid():
+            Airline.update_airline(
+                airline_id=airline_id,
+                name=form.cleaned_data['name'],
+                code=form.cleaned_data['code']
+            )
+            return redirect('airline_list')
+    else:
+        form = AirlineForm(initial=airline_data)
+    return render(request, 'tickets/edit_airline.html', {'form': form, 'airline_id': airline_id})
+
+
+
+# Представление для редактирования пользователя
+def edit_user(request, user_id):
+    user_data = User.get_user(user_id)
+    if request.method == 'POST':
+        form = UserForm(request.POST, initial=user_data)
+        if form.is_valid():
+            User.update_user(
+                user_id=user_id,
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password'] if form.cleaned_data.get('password') else None
+            )
+            return redirect('user_list')
+    else:
+        form = UserForm(initial=user_data)
+    return render(request, 'tickets/edit_user.html', {'form': form, 'user_id': user_id})
+
+
+# Представление для редактирования билета
+def edit_ticket(request, ticket_id):
+    ticket_data = Ticket.get_ticket(ticket_id)
+    if request.method == 'POST':
+        form = TicketForm(request.POST, initial=ticket_data)
+        if form.is_valid():
+            Ticket.update_ticket(
+                ticket_id=ticket_id,
+                user_id=form.cleaned_data.get("user_id"),
+                airline_id=form.cleaned_data.get("airline_id"),
+                flight_number=form.cleaned_data.get("flight_number"),
+                departure=form.cleaned_data.get("departure"),
+                arrival=form.cleaned_data.get("arrival"),
+                date=form.cleaned_data.get("date"),
+                price=form.cleaned_data.get("price")
+            )
+            return redirect('ticket_list')
+    else:
+        form = TicketForm(initial=ticket_data)
+    return render(request, 'tickets/edit_ticket.html', {'form': form, 'ticket_id': ticket_id})
+
+def delete_ticket(request, ticket_id):
+    Ticket.delete_ticket(ticket_id)
+    return redirect('ticket_list')
+def delete_user(request, user_id):
+    User.delete_user(user_id)
+    return redirect('user_list')
+def delete_airline(request, airline_id):
+    Airline.delete_airline(airline_id)
+    return redirect('airline_list')

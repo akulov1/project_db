@@ -34,6 +34,20 @@ class User:
         users = [redis_client.hgetall(user_key) for user_key in users_keys]
         return users
 
+    @staticmethod
+    def delete_user(user_id):
+        redis_client.delete(f"user:{user_id}")
+
+    @staticmethod
+    def update_user(user_id, username, email, password=None):
+        update_data = {
+            "username": username,
+            "email": email
+        }
+        if password:
+            update_data["password"] = password
+        redis_client.hset(f"user:{user_id}", mapping=update_data)
+
 class Airline:
     @staticmethod
     def create_airline(name, code):
@@ -54,6 +68,17 @@ class Airline:
         airlines_keys = redis_client.keys("airline:*")
         airlines = [redis_client.hgetall(airline_key) for airline_key in airlines_keys]
         return airlines
+
+    @staticmethod
+    def delete_airline(airline_id):
+        redis_client.delete(f"airline:{airline_id}")
+
+    @staticmethod
+    def update_airline(airline_id, name, code):
+        redis_client.hset(f"airline:{airline_id}", mapping={
+            "name": name,
+            "code": code
+        })
 
 class Ticket:
     @staticmethod
@@ -87,3 +112,23 @@ class Ticket:
         ticket_keys = redis_client.keys("ticket:*")
         tickets = [redis_client.hgetall(ticket_key) for ticket_key in ticket_keys]
         return tickets
+
+    @staticmethod
+    def update_ticket(ticket_id, user_id, airline_id, flight_number, departure, arrival, date, price):
+        # Преобразуем дату и цену в нужные типы
+        date_str = date.isoformat() if isinstance(date, datetime) else date
+        price_float = float(price) if isinstance(price, Decimal) else price
+
+        redis_client.hset(f"ticket:{ticket_id}", mapping={
+            "user_id": user_id,
+            "airline_id": airline_id,
+            "flight_number": flight_number,
+            "departure": departure,
+            "arrival": arrival,
+            "date": date_str,
+            "price": price_float
+        })
+
+    @staticmethod
+    def delete_ticket(ticket_id):
+        redis_client.delete(f"ticket:{ticket_id}")
