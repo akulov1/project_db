@@ -8,7 +8,6 @@
 <table>
     <thead>
         <tr>
-            <th>ID авиакомпании</th>
             <th>Название</th>
             <th>Код</th>
             <th>Детали</th>
@@ -17,7 +16,6 @@
     <tbody>
         {% for airline in airlines %}
         <tr>
-            <td>{{ airline.id }}</td>
             <td>{{ airline.name }}</td>
             <td>{{ airline.code }}</td>
             <td><a href="{% url 'airline_detail' airline.id %}" class="button">Подробнее</a></td>

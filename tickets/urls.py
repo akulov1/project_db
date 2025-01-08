@@ -17,4 +17,5 @@ urlpatterns = [
     path('users/<str:user_id>/delete/', views.delete_user, name='delete_user'),
     path('tickets/<str:ticket_id>/edit/', views.edit_ticket, name='edit_ticket'),
     path('tickets/<str:ticket_id>/delete/', views.delete_ticket, name='delete_ticket'),
+    path("create_flight/", views.create_flight, name="create_flight"),
 ]

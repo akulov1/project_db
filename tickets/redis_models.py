@@ -83,24 +83,17 @@ class Airline:
 class Ticket:
     @staticmethod
     def create_ticket(user_id, airline_id, flight_number, departure, arrival, date, price):
-        ticket_id = str(uuid.uuid4())
-        date_str = date.isoformat() if isinstance(date, datetime) else date
-        price_float = float(price) if isinstance(price, Decimal) else price
-
-        ticket_data = {
-            "ticket_id": ticket_id,
-            "airline_id": airline_id,
+        ticket_id = str(uuid.uuid4())  # Уникальный идентификатор для билета
+        redis_client.hset(f"ticket:{ticket_id}", mapping={
+            "id": ticket_id,
+            "user_id": user_id,
+            "airline_id": airline_id if airline_id else "",  # Преобразуем None в пустую строку
             "flight_number": flight_number,
             "departure": departure,
             "arrival": arrival,
-            "date": date_str,
-            "price": price_float,
-        }
-        # Добавляем user_id только если он не пустой
-        if user_id:
-            ticket_data["user_id"] = user_id
-
-        redis_client.hset(f"ticket:{ticket_id}", mapping=ticket_data)
+            "date": date,
+            "price": float(price)  # Преобразуем цену в float
+        })
         return ticket_id
 
     @staticmethod
@@ -132,3 +125,33 @@ class Ticket:
     @staticmethod
     def delete_ticket(ticket_id):
         redis_client.delete(f"ticket:{ticket_id}")
+
+class Flight:
+    @staticmethod
+    def create_flight(flight_number,airline_id, departure, arrival, date, price):
+        flight_id = str(uuid.uuid4())  # Генерация уникального ID для рейса
+        redis_client.hset(f"flight:{flight_id}", mapping={
+            "flight_number": flight_number,
+            "airline_id": airline_id,
+            "departure": departure,
+            "arrival": arrival,
+            "date": date,
+            "price": float(price)
+        })
+        return flight_id
+
+    @staticmethod
+    def get_all_flights():
+        keys = redis_client.keys("flight:*")
+        flights = []
+        for key in keys:
+            flight_data = redis_client.hgetall(key)
+            flights.append({
+                "id": key.split(":")[1],
+                "flight_number": flight_data["flight_number"],
+                "departure": flight_data["departure"],
+                "arrival": flight_data["arrival"],
+                "date": flight_data["date"],
+                "price": flight_data["price"]
+            })
+        return flights

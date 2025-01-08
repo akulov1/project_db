@@ -27,12 +27,12 @@ class TicketForm(forms.Form):
         required=False,
         label="Пользователь"
     )
-    airline_id = forms.ChoiceField(
-        choices=[(airline["id"], airline["name"]) for airline in Airline.get_all_airlines()],
-        label="Авиакомпания"
-    )
-    flight_number = forms.CharField(label="Номер рейса", max_length=20)
-    departure = forms.ChoiceField(choices=CITIES, label='Пункт отправления')
-    arrival = forms.ChoiceField(choices=CITIES, label='Пункт прибытия')
-    date = forms.DateTimeField(label="Дата и время рейса", widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-    price = forms.DecimalField(label="Цена", max_digits=10, decimal_places=2)
+    flight_id = forms.ChoiceField(label="Flight", choices=[])
+
+class FlightForm(forms.Form):
+    airline_id = forms.CharField(label="Airline id", max_length=10)
+    flight_number = forms.CharField(label="Flight Number", max_length=10)
+    departure = forms.CharField(label="Departure Airport", max_length=3)
+    arrival = forms.CharField(label="Arrival Airport", max_length=3)
+    date = forms.CharField(label="Flight Date")
+    price = forms.DecimalField(label="Price", max_digits=10, decimal_places=2)

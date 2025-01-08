@@ -7,9 +7,7 @@
 <table>
     <thead>
         <tr>
-            <th>ID билета</th>
             <th>Пользователь</th>
-            <th>Авиакомпания</th>
             <th>Номер рейса</th>
             <th>Отправление</th>
             <th>Прибытие</th>
@@ -20,17 +18,15 @@
     <tbody>
         {% for ticket in tickets %}
         <tr>
-            <td>{{ ticket.id }}</td>
             <td>{{ ticket.user_id }}</td>
-            <td>{{ ticket.airline_id }}</td>
             <td>{{ ticket.flight_number }}</td>
             <td>{{ ticket.departure }}</td>
             <td>{{ ticket.arrival }}</td>
             <td>{{ ticket.date }}</td>
             <td>{{ ticket.price }}</td>
-            <td><a href="{% url 'ticket_detail' ticket_id=ticket.ticket_id %}" class="button">Подробнее</a></td>
-            <td><a href="{% url 'edit_ticket' ticket_id=ticket.ticket_id %}" class="button">Редактировать</a></td>
-            <td><a href="{% url 'delete_ticket' ticket_id=ticket.ticket_id %}" class="button">Удалить</a></td>
+            <td><a href="{% url 'ticket_detail' ticket_id=ticket.id %}" class="button">Подробнее</a></td>
+            <td><a href="{% url 'edit_ticket' ticket_id=ticket.id %}" class="button">Редактировать</a></td>
+            <td><a href="{% url 'delete_ticket' ticket_id=ticket.id %}" class="button">Удалить</a></td>
         </tr>
         {% endfor %}
     </tbody>

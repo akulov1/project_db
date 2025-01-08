@@ -1,6 +1,24 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .forms import UserForm, AirlineForm, TicketForm
-from .redis_models import User, Airline, Ticket
+from .forms import UserForm, AirlineForm, TicketForm, FlightForm
+from .redis_models import User, Airline, Ticket, Flight
+
+
+def create_flight(request):
+    if request.method == "POST":
+        form = FlightForm(request.POST)
+        if form.is_valid():
+            flight_id = Flight.create_flight(
+                airline_id=form.cleaned_data["airline_id"],
+                flight_number=form.cleaned_data["flight_number"],
+                departure=form.cleaned_data["departure"],
+                arrival=form.cleaned_data["arrival"],
+                date=form.cleaned_data["date"],
+                price=form.cleaned_data["price"]
+            )
+            return redirect("/tickets", flight_id=flight_id)
+    else:
+        form = FlightForm()
+    return render(request, "tickets/create_flight.html", {"form": form})
 
 #представление для создания пользователя
 def create_user(request):
@@ -39,30 +57,44 @@ def airline_detail(request, airline_id):
     airline = Airline.get_airline(airline_id)
     return render(request, "tickets/airline_detail.html", {"airline": airline})
 
+
 def create_ticket(request):
+    flights = Flight.get_all_flights()
+    flight_choices = [(flight["id"], f"{flight['flight_number']} - {flight['departure']} -> {flight['arrival']}") for
+                      flight in flights]
+
     if request.method == "POST":
         form = TicketForm(request.POST)
+        form.fields["flight_id"].choices = flight_choices
         if form.is_valid():
-            user_id = form.cleaned_data["user_id"] or None  # Может быть None, если не выбран
-            airline_id = form.cleaned_data["airline_id"]
-            flight_number = form.cleaned_data["flight_number"]
-            departure = form.cleaned_data["departure"]
-            arrival = form.cleaned_data["arrival"]
-            date = form.cleaned_data["date"]
-            price = form.cleaned_data["price"]
+            flight_id = form.cleaned_data["flight_id"]
+            flight = next((f for f in flights if f["id"] == flight_id), None)
+            if not flight:
+                return render(request, "tickets/create_ticket.html", {
+                    "form": form,
+                    "error": "Selected flight not found. Please try again."
+                })
 
             ticket_id = Ticket.create_ticket(
-                user_id,
-                airline_id,
-                flight_number,
-                departure,
-                arrival,
-                date,
-                price
+                user_id=form.cleaned_data["user_id"],
+                airline_id=None,
+                flight_number=flight["flight_number"],
+                departure=flight["departure"],
+                arrival=flight["arrival"],
+                date=flight["date"],
+                price=flight["price"]
             )
+
+            if not ticket_id:  # Проверяем, что билет был создан
+                return render(request, "tickets/create_ticket.html", {
+                    "form": form,
+                    "error": "Failed to create ticket. Please try again."
+                })
+
             return redirect("ticket_detail", ticket_id=ticket_id)
     else:
         form = TicketForm()
+        form.fields["flight_id"].choices = flight_choices
     return render(request, "tickets/create_ticket.html", {"form": form})
 
 # Представление для отображения информации о билете
